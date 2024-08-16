@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: app
+    build: .docker/app
+    environment:
+      - PHP_IDE_CONFIG=serverName=shop
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/var/www
+      - .docker/app/.bashrc:/home/www-data/.bashrc
+      - .docker/app/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  nginx:
+    container_name: nginx
+    build: ./.docker/nginx
+    volumes:
+      - ./:/var/www
+    ports:
+      - 49100:80
+    links:
+      - app
+  redis:
+    container_name: redis
+    image: redis:7.0-alpine
