@@ -5,7 +5,7 @@ services:
     container_name: app
     build: .docker/app
     environment:
-      - PHP_IDE_CONFIG=serverName=shop
+      - PHP_IDE_CONFIG=serverName=testRestAPI
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
