@@ -8,12 +8,10 @@ use App\Service\ChangeTodoService;
 use App\Service\GetTodosService;
 use App\Service\GetUserTodosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 
 class TodosController extends AbstractController
 {
@@ -24,11 +22,6 @@ class TodosController extends AbstractController
     ) {
     }
 
-    /**
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     #[Route(path: '/todos', methods: 'GET')]
     public function getAllTodos(Request $request): Response
     {
@@ -45,5 +38,16 @@ class TodosController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         return $this->json($this->changeTodoService->change($id, $data));
+    }
+
+    #[Route(path: '/test', methods: 'GET')]
+    public function testCache(): Response
+    {
+        $cache = RedisAdapter::createConnection('redis://redis:6379');
+        if ($cache->get('foo')) {
+            return $this->json('hui');
+        }
+        $cache->set('foo', 'bar', 5);
+        return $this->json('hui2');
     }
 }
