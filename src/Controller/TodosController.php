@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
+use App\Service\ChangeTodoService;
 use App\Service\GetTodosService;
 use App\Service\GetUserTodosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +19,8 @@ class TodosController extends AbstractController
 {
     public function __construct(
         private GetTodosService $todosService,
-        private GetUserTodosService $userTodosService
+        private GetUserTodosService $userTodosService,
+        private ChangeTodoService $changeTodoService
     ) {
     }
 
@@ -36,8 +40,10 @@ class TodosController extends AbstractController
     }
 
     #[Route(path: '/todos/{id}', requirements: ['id' => '\d+'], methods: 'PUT')]
-    public function createTodo(int $id, Request $request): Response
+    public function ChangeTodo(int $id, Request $request): Response
     {
-        return $this->json($request->getContent());
+        $data = json_decode($request->getContent(), true);
+
+        return $this->json($this->changeTodoService->change($id, $data));
     }
 }
