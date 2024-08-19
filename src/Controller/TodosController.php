@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Cache\Proxy;
 use App\Service\ChangeTodoService;
 use App\Service\GetTodosService;
 use App\Service\GetUserTodosService;
@@ -18,7 +19,7 @@ class TodosController extends AbstractController
     public function __construct(
         private GetTodosService $todosService,
         private GetUserTodosService $userTodosService,
-        private ChangeTodoService $changeTodoService
+        private ChangeTodoService $changeTodoService,
     ) {
     }
 
@@ -43,11 +44,6 @@ class TodosController extends AbstractController
     #[Route(path: '/test', methods: 'GET')]
     public function testCache(): Response
     {
-        $cache = RedisAdapter::createConnection('redis://redis:6379');
-        if ($cache->get('foo')) {
-            return $this->json('hui');
-        }
-        $cache->set('foo', 'bar', 5);
-        return $this->json('hui2');
+        return $this->json('nothing');
     }
 }
