@@ -8,6 +8,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GetUserTodos
 {
+    private const URL = 'https://jsonplaceholder.typicode.com/todos?userId=%d';
+
     public function __construct(private HttpClientInterface $client)
     {
     }
@@ -16,7 +18,7 @@ class GetUserTodos
     {
         $response = $this->client->request(
             'GET',
-            'https://jsonplaceholder.typicode.com/todos?userId='.$userId
+            sprintf(self::URL, $userId)
         );
 
         return $response->toArray();

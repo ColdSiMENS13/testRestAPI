@@ -8,6 +8,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ChangeTodo
 {
+    private const URL = 'https://jsonplaceholder.typicode.com/todos/%d';
     public function __construct(private HttpClientInterface $client)
     {
     }
@@ -16,7 +17,7 @@ class ChangeTodo
     {
         $response = $this->client->request(
             'PUT',
-            'https://jsonplaceholder.typicode.com/todos/'.$id,
+            sprintf(self::URL, $id),
             [
                 'headers' => [
                     'Content-Type' => 'application/json; charset=utf-8',

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Cache\Proxy;
 use App\Service\ChangeTodoService;
 use App\Service\GetTodosService;
 use App\Service\GetUserTodosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\RedisAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,11 +37,5 @@ class TodosController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         return $this->json($this->changeTodoService->change($id, $data));
-    }
-
-    #[Route(path: '/test', methods: 'GET')]
-    public function testCache(): Response
-    {
-        return $this->json('nothing');
     }
 }
