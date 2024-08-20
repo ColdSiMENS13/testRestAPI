@@ -7,11 +7,13 @@ namespace App\Service;
 use App\Repository\GetUserTodos;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class GetUserTodosService
 {
     private const CACHE_KEY = 'UserTodos_%s_%d';
-    public function __construct(private GetUserTodos $userTodos, private CacheInterface $cache)
+
+    public function __construct(private GetUserTodos $userTodos, private TagAwareCacheInterface $cache)
     {
     }
 
@@ -20,7 +22,9 @@ class GetUserTodosService
         return $this->cache->get(
             sprintf(self::CACHE_KEY, md5(self::class), $userId),
             function (ItemInterface $item) use ($userId) {
+                $item->tag('UserTodos');
                 $item->expiresAfter(3600);
+
                 return $this->userTodos->get($userId);
             }
         );
