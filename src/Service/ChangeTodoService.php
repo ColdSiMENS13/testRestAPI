@@ -15,7 +15,7 @@ class ChangeTodoService
 
     public function change(int $id, array $payload): array
     {
-        $this->cache->invalidateTags(['AllTodos', 'UserTodos']);
+        $this->cache->invalidateTags([GetTodosService::TAG, GetUserTodosService::TAG]);
 
         return $this->changeTodo->change($id, $payload);
     }

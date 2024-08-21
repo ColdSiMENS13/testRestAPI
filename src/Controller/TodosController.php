@@ -22,7 +22,7 @@ class TodosController extends AbstractController
     }
 
     #[Route(path: '/todos', methods: 'GET')]
-    public function getAllTodos(Request $request): Response
+    public function getTodos(Request $request): Response
     {
         if (null !== $request->get('userId')) {
             return $this->json($this->userTodosService->getUserTodos((int) $request->get('userId')));
@@ -32,7 +32,7 @@ class TodosController extends AbstractController
     }
 
     #[Route(path: '/todos/{id}', requirements: ['id' => '\d+'], methods: 'PUT')]
-    public function ChangeTodo(int $id, Request $request): Response
+    public function changeTodo(int $id, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
 
