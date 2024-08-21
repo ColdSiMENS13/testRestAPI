@@ -20,22 +20,18 @@ class GetUserTodosService
     }
 
     /**
-     * @throws ServerErrorException
+     * @throws InvalidArgumentException
      */
     public function getUserTodos(int $userId): array
     {
-        try {
-            return $this->cache->get(
-                sprintf(self::CACHE_KEY, md5(self::class.$userId)),
-                function (ItemInterface $item) use ($userId) {
-                    $item->tag(self::TAG);
-                    $item->expiresAfter(3600);
+        return $this->cache->get(
+            sprintf(self::CACHE_KEY, md5(self::class.$userId)),
+            function (ItemInterface $item) use ($userId) {
+                $item->tag(self::TAG);
+                $item->expiresAfter(3600);
 
-                    return $this->userTodos->get($userId);
-                }
-            );
-        } catch (InvalidArgumentException $e) {
-            throw new ServerErrorException($e->getMessage(), 1111);
-        }
+                return $this->userTodos->get($userId);
+            }
+        );
     }
 }

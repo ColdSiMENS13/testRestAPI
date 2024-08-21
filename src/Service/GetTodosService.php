@@ -20,22 +20,18 @@ class GetTodosService
     }
 
     /**
-     * @throws ServerErrorException
+     * @throws InvalidArgumentException
      */
     public function getTodos(): array
     {
-        try {
-            return $this->cache->get(
-                sprintf(self::CACHE_KEY, md5(self::class)),
-                function (ItemInterface $item): array {
-                    $item->tag(self::TAG);
-                    $item->expiresAfter(3600);
+        return $this->cache->get(
+            sprintf(self::CACHE_KEY, md5(self::class)),
+            function (ItemInterface $item): array {
+                $item->tag(self::TAG);
+                $item->expiresAfter(3600);
 
-                    return $this->todos->get();
-                }
-            );
-        } catch (InvalidArgumentException $e) {
-            throw new ServerErrorException($e->getMessage(), 1111);
-        }
+                return $this->todos->get();
+            },
+        );
     }
 }
