@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Exceptions\ServerErrorException;
 use App\Repository\ChangeTodo;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class ChangeTodoService
@@ -13,9 +15,16 @@ class ChangeTodoService
     {
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function change(int $id, array $payload): array
     {
-        $this->cache->invalidateTags([GetTodosService::TAG, GetUserTodosService::TAG]);
+        try {
+            $this->cache->invalidateTags([GetTodosService::TAG, GetUserTodosService::TAG]);
+        } catch (InvalidArgumentException $e) {
+            throw new ServerErrorException($e->getMessage(), 1111);
+        }
 
         return $this->changeTodo->change($id, $payload);
     }
