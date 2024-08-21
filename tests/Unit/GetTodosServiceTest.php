@@ -14,7 +14,6 @@ class GetTodosServiceTest extends Unit
     protected GetTodos|MockObject $todos;
     protected TagAwareCacheInterface|MockObject $cache;
 
-
     protected function _before()
     {
         $this->cache = $this->createMock(TagAwareCacheInterface::class);
@@ -24,7 +23,7 @@ class GetTodosServiceTest extends Unit
 
     public function testGetTodos()
     {
-        $this->todos->expects($this->once())
+        $this->cache->expects($this->once())
             ->method('get')
             ->willReturn([0 => ['userId' => 1]]);
 
