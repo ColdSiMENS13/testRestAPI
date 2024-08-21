@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit;
 
 use App\Repository\GetUserTodos;
@@ -26,6 +28,17 @@ class GetUserTodosServiceTest extends Unit
         $this->cache->expects($this->once())
             ->method('get')
             ->willReturn([0 => ['userId' => 1]]);
+
+        $this->userTodosService->getUserTodos(1);
+    }
+
+    public function testGetUserTodosException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->willThrowException(new \InvalidArgumentException());
 
         $this->userTodosService->getUserTodos(1);
     }

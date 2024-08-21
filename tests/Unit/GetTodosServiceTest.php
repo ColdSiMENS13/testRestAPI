@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit;
 
 use App\Repository\GetTodos;
@@ -21,9 +23,21 @@ class GetTodosServiceTest extends Unit
         $this->todosService = new GetTodosService($this->todos, $this->cache);
     }
 
-    public function testGetTodos()
+    public function testGetTodosFromCache()
     {
         $this->cache->expects($this->once())
+            ->method('get')
+            ->willReturn([0 => ['userId' => 1]]);
+
+        $this->todos->expects($this->never())
+            ->method('get');
+
+        $this->todosService->getTodos();
+    }
+
+    public function testGetTodos()
+    {
+        $this->todos->expects($this->once())
             ->method('get')
             ->willReturn([0 => ['userId' => 1]]);
 
