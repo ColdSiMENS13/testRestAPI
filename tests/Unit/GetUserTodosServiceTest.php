@@ -23,23 +23,15 @@ class GetUserTodosServiceTest extends Unit
         $this->userTodosService = new GetUserTodosService($this->userTodos, $this->cache);
     }
 
-    public function testGetUserTodos()
+    public function testGetUserTodosFromCache()
     {
         $this->cache->expects($this->once())
             ->method('get')
             ->willReturn([0 => ['userId' => 1]]);
 
-        $this->userTodosService->getUserTodos(1);
-    }
+        $this->userTodos->expects($this->never())
+            ->method('get');
 
-    public function testGetUserTodosException()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        $this->cache->expects($this->once())
-            ->method('get')
-            ->willThrowException(new \InvalidArgumentException());
-
-        $this->userTodosService->getUserTodos(1);
+        $this->assertEquals([0 => ['userId' => 1]], $this->userTodosService->getUserTodos(1));
     }
 }

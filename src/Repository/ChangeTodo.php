@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Exceptions\UserNotFoundException;
+use App\Exceptions\TodoNotFoundException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -27,9 +27,14 @@ class ChangeTodo
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     * @throws TodoNotFoundException
      */
     public function change(int $id, array $payload): array
     {
+        if ($id > 200 || $id <= 0) {
+            throw new TodoNotFoundException();
+        }
+
         $response = $this->client->request(
             'PUT',
             self::DOMAIN.sprintf(self::URI, $id),

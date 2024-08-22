@@ -15,13 +15,12 @@ final class ExceptionListener
     {
         $exception = $event->getThrowable();
         if ($this->checkException($exception)) {
-            $message = sprintf('%s with code %s', $exception->getMessage(), $exception->getCode());
+            $message = sprintf('%s, code: %s', $exception->getMessage(), $exception->getCode());
         } else {
             $message = $this->buildMessage($exception);
         }
 
         $event->setResponse(new JsonResponse($message));
-        $event->allowCustomResponseCode();
     }
 
     private function buildMessage(\Throwable $throwable): string
@@ -38,7 +37,8 @@ final class ExceptionListener
     private function checkException(\Throwable $throwable): bool
     {
         return match (true) {
-            $throwable instanceof UserNotFoundException => true,
+            $throwable instanceof UserNotFoundException,
+            $throwable instanceof TodoNotFoundException => true,
             default => false
         };
     }

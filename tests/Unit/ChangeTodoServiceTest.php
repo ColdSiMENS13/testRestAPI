@@ -25,10 +25,14 @@ class ChangeTodoServiceTest extends Unit
 
     public function testChangeTodo()
     {
-        $this->changeTodoService->change(1, ['completed' => true]);
-    }
+        $this->cache->expects($this->once())
+            ->method('invalidateTags');
 
-    public function testGetTodosException()
-    {
+        $this->changeTodo->expects($this->once())
+            ->method('change')
+            ->with(1, ['completed' => true])
+            ->willReturn(['completed' => true, 'id' => 1]);
+
+        $this->assertEquals(['completed' => true, 'id' => 1], $this->changeTodoService->change(1, ['completed' => true]));
     }
 }

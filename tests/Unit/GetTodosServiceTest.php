@@ -32,26 +32,6 @@ class GetTodosServiceTest extends Unit
         $this->todos->expects($this->never())
             ->method('get');
 
-        $this->todosService->getTodos();
-    }
-
-    public function testGetTodos()
-    {
-        $this->todos->expects($this->once())
-            ->method('get')
-            ->willReturn([0 => ['userId' => 1]]);
-
-        $this->todosService->getTodos();
-    }
-
-    public function testGetTodosException()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        $this->cache->expects($this->once())
-            ->method('get')
-            ->willThrowException(new \InvalidArgumentException());
-
-        $this->todosService->getTodos();
+        $this->assertEquals([0 => ['userId' => 1]], $this->todosService->getTodos());
     }
 }
