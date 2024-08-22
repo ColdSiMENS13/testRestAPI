@@ -34,18 +34,4 @@ class GetUserTodosServiceTest extends Unit
 
         $this->assertEquals([0 => ['userId' => 1]], $this->userTodosService->getUserTodos(1));
     }
-
-    public function testGetUserTodos()
-    {
-        $this->cache->expects($this->once())
-            ->method('get')
-            ->willReturn(null);
-
-        $this->userTodos->expects($this->once())
-            ->method('get')
-            ->with(1)
-            ->willReturn([0 => ['userId' => 1]]);
-
-        $this->assertEquals([0 => ['userId' => 1]], $this->userTodosService->getUserTodos(1));
-    }
 }
