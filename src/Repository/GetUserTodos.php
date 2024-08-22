@@ -21,7 +21,6 @@ class GetUserTodos
     {
     }
 
-
     /**
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
@@ -32,14 +31,14 @@ class GetUserTodos
      */
     public function get(int $userId): array
     {
+        if ($userId > 10 || $userId <= 0) {
+            throw new UserNotFoundException();
+        }
+
         $response = $this->client->request(
             'GET',
             self::DOMAIN.sprintf(self::URI, $userId)
         );
-
-        if ([] === $response->toArray()) {
-            throw new UserNotFoundException();
-        }
 
         return $response->toArray();
     }
