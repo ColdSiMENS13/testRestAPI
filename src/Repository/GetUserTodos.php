@@ -14,7 +14,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GetUserTodos
 {
-    private const DOMAIN = 'https://jsonplaceholder.typicode.com';
     private const URI = '/todos?userId=%d';
 
     public function __construct(private HttpClientInterface $client)
@@ -31,13 +30,15 @@ class GetUserTodos
      */
     public function get(int $userId): array
     {
+        $domain = $_ENV['DOMAIN_URL'];
+
         if ($userId > 10 || $userId <= 0) {
             throw new UserNotFoundException();
         }
 
         $response = $this->client->request(
             'GET',
-            self::DOMAIN.sprintf(self::URI, $userId)
+            $domain.sprintf(self::URI, $userId)
         );
 
         return $response->toArray();

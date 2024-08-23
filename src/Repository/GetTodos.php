@@ -13,7 +13,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GetTodos
 {
-    private const DOMAIN = 'https://jsonplaceholder.typicode.com';
     private const URI = '/todos';
 
     public function __construct(private HttpClientInterface $client)
@@ -29,9 +28,11 @@ class GetTodos
      */
     public function get(): array
     {
+        $domain = $_ENV['DOMAIN_URL'];
+
         $response = $this->client->request(
             'GET',
-            self::DOMAIN.self::URI
+            $domain.self::URI
         );
 
         return $response->toArray();

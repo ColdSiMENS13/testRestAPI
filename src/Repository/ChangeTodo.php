@@ -14,7 +14,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ChangeTodo
 {
-    private const DOMAIN = 'https://jsonplaceholder.typicode.com';
     private const URI = '/todos/%d';
 
     public function __construct(private HttpClientInterface $client)
@@ -31,13 +30,15 @@ class ChangeTodo
      */
     public function change(int $id, array $payload): array
     {
+        $domain = $_ENV['DOMAIN_URL'];
+
         if ($id > 200 || $id <= 0) {
             throw new TodoNotFoundException();
         }
 
         $response = $this->client->request(
             'PUT',
-            self::DOMAIN.sprintf(self::URI, $id),
+            $domain.sprintf(self::URI, $id),
             [
                 'headers' => [
                     'Content-Type' => 'application/json; charset=utf-8',
