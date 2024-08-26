@@ -2,7 +2,8 @@
 
 namespace App\Infrastructure\HttpClientApi;
 
-use App\Application\Service\TodosServiceInterface;
+use App\Exceptions\TodoNotFoundException;
+use App\Exceptions\UserNotFoundException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -10,7 +11,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class TodoServiceApi implements TodosServiceInterface
+readonly class TodoServiceApi implements TodosServiceApiInterface
 {
     private const URI_ALL_TODO = '/todos';
     private const URI_USER_TODO = '/todos?userId=%d';
@@ -45,9 +46,14 @@ class TodoServiceApi implements TodosServiceInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     * @throws UserNotFoundException
      */
     public function getUserTodos(int $userId): array
     {
+        if ($userId > 10 || $userId <= 0) {
+            throw new UserNotFoundException();
+        }
+
         $response = $this->client->request(
             'GET',
             $this->domain.sprintf(self::URI_USER_TODO, $userId)
@@ -62,9 +68,14 @@ class TodoServiceApi implements TodosServiceInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     * @throws TodoNotFoundException
      */
     public function changeTodo(int $todoId, array $payload): array
     {
+        if ($todoId > 200 || $todoId <= 0) {
+            throw new TodoNotFoundException();
+        }
+
         $response = $this->client->request(
             'PUT',
             $this->domain.sprintf(self::URI_CHANGE_TODO, $todoId),

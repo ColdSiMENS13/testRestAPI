@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Infrastructure\HttpClientApi\TodosServiceApiInterface;
 use App\Service\ChangeTodoService;
 use App\Service\GetTodosService;
 use App\Service\GetUserTodosService;
@@ -15,9 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TodosController extends AbstractController
 {
     public function __construct(
-        private GetTodosService $todosService,
-        private GetUserTodosService $userTodosService,
-        private ChangeTodoService $changeTodoService,
+        private TodosServiceApiInterface $todosServiceApi,
     ) {
     }
 
@@ -25,10 +24,10 @@ class TodosController extends AbstractController
     public function getTodos(Request $request): Response
     {
         if (null !== $request->get('userId')) {
-            return $this->json($this->userTodosService->getUserTodos((int) $request->get('userId')));
+            return $this->json($this->todosServiceApi->getUserTodos((int) $request->get('userId')));
         }
 
-        return $this->json($this->todosService->getTodos());
+        return $this->json($this->todosServiceApi->getTodos());
     }
 
     #[Route(path: '/todos/{id}', requirements: ['id' => '\d+'], methods: 'PUT')]
@@ -36,6 +35,6 @@ class TodosController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        return $this->json($this->changeTodoService->change($id, $data));
+        return $this->json($this->todosServiceApi->changeTodo($id, $data));
     }
 }

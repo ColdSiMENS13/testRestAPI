@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Application\Service;
+namespace App\Infrastructure\HttpClientApi;
 
-interface TodosServiceInterface
+interface TodosServiceApiInterface
 {
     public function getTodos(): array;
     public function getUserTodos(int $userId): array;
