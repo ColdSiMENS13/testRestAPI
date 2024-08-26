@@ -2,9 +2,9 @@
 
 namespace App\Infrastructure\HttpClientApi;
 
-use App\Exceptions\TodoNotFoundException;
-use App\Exceptions\UserNotFoundException;
-use App\Infrastructure\TodoDTO;
+use App\Application\Exception\TodoNotFoundException;
+use App\Application\Exception\UserNotFoundException;
+use App\Application\Service\TodosServiceInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -12,7 +12,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-readonly class TodoServiceApi implements TodosServiceApiInterface
+readonly class TodoServiceApi implements TodosServiceInterface
 {
     private const URI_ALL_TODO = '/todos';
     private const URI_USER_TODO = '/todos?userId=%d';
