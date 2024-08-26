@@ -21,8 +21,10 @@ readonly class CachedTodoServiceApi extends TodoServiceApi implements TodosServi
     private const TODO_TAG = 'AllTodos';
     private const USER_TODO_TAG = 'UserTodos';
 
-    public function __construct(private TagAwareCacheInterface $cache, HttpClientInterface $client)
-    {
+    public function __construct(
+        private TagAwareCacheInterface $cache,
+        HttpClientInterface $client,
+    ) {
         parent::__construct($client);
     }
 
