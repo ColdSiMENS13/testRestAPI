@@ -2,8 +2,7 @@
 
 namespace App\Infrastructure\Cache;
 
-use App\Infrastructure\HttpClientApi\TodoServiceApi;
-use App\Infrastructure\HttpClientApi\TodosServiceApiInterface;
+use App\Application\Service\TodosServiceInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
@@ -14,7 +13,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-readonly class CachedTodoServiceApi implements TodosServiceApiInterface
+readonly class CachedTodoServiceApi implements TodosServiceInterface
 {
     private const TODO_CACHE_KEY = 'AllTodos_%s';
     private const USER_TODO_CACHE_KEY = 'UserTodos_%s';
@@ -23,7 +22,7 @@ readonly class CachedTodoServiceApi implements TodosServiceApiInterface
 
     public function __construct(
         private TagAwareCacheInterface $cache,
-        private TodosServiceApiInterface $todosServiceApi
+        private TodosServiceInterface  $todosServiceApi
     ) {
     }
 

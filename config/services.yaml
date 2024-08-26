@@ -25,7 +25,7 @@ services:
         arguments:
             $todosServiceApi: '@App\Infrastructure\HttpClientApi\TodoServiceApi'
 
-    App\Infrastructure\HttpClientApi\TodosServiceApiInterface:
+    App\Application\Service\TodosServiceInterface:
         alias: App\Infrastructure\Cache\CachedTodoServiceApi
 
 
