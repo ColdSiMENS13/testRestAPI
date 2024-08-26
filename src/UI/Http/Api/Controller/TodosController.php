@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\UI\Http\Api\Controller;
 
 use App\Infrastructure\HttpClientApi\TodosServiceApiInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

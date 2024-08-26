@@ -20,8 +20,15 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Infrastructure\HttpClientApi\TodosServiceApiInterface:
+    App\Infrastructure\Cache\CachedTodoServiceApi:
         class: App\Infrastructure\Cache\CachedTodoServiceApi
+        arguments:
+            $todosServiceApi: '@App\Infrastructure\HttpClientApi\TodoServiceApi'
+
+    App\Infrastructure\HttpClientApi\TodosServiceApiInterface:
+        alias: App\Infrastructure\Cache\CachedTodoServiceApi
+
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

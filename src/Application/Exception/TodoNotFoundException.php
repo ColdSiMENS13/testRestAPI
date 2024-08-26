@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Exceptions;
+namespace App\Application\Exception;
 
 class TodoNotFoundException extends \Exception
 {

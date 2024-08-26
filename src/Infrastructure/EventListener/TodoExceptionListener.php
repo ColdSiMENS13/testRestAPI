@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Exceptions;
+namespace App\Infrastructure\EventListener;
 
+use App\Application\Exception\TodoNotFoundException;
+use App\Application\Exception\UserNotFoundException;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 #[AsEventListener('kernel.exception')]
-final class ExceptionListener
+final readonly class TodoExceptionListener
 {
     public function onKernelException(ExceptionEvent $event): void
     {
@@ -38,7 +40,7 @@ final class ExceptionListener
     {
         return match (true) {
             $throwable instanceof UserNotFoundException,
-            $throwable instanceof TodoNotFoundException => true,
+                $throwable instanceof TodoNotFoundException => true,
             default => false
         };
     }
