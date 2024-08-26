@@ -2,9 +2,8 @@
 
 namespace App\Infrastructure\HttpClientApi;
 
-use App\Exceptions\TodoNotFoundException;
-use App\Exceptions\UserNotFoundException;
-use App\Infrastructure\TodoDTO;
+use App\Application\Exception\TodoNotFoundException;
+use App\Application\Exception\UserNotFoundException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
