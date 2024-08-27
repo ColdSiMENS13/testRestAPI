@@ -11,7 +11,6 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 readonly class CachedTodoServiceApi implements TodosServiceInterface
 {
@@ -22,7 +21,7 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
 
     public function __construct(
         private TagAwareCacheInterface $cache,
-        private TodosServiceInterface  $todosServiceApi
+        private TodosServiceInterface $todosServiceApi
     ) {
     }
 
