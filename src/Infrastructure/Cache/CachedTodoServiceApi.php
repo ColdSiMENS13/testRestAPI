@@ -48,11 +48,11 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function getUserTodos(int $userId): array
+    public function getUserTodos(int $userId): TodoCollection
     {
         $userTodos = $this->cache->get(
             sprintf(self::USER_TODO_CACHE_KEY, md5(self::class.$userId)),
-            function (ItemInterface $item) use ($userId) {
+            function (ItemInterface $item) use ($userId): TodoCollection {
                 $userTodos = $this->todosServiceApi->getUserTodos($userId);
                 $item->tag(self::USER_TODO_TAG);
                 $item->expiresAfter(3600);

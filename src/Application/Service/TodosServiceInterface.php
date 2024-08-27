@@ -9,7 +9,7 @@ interface TodosServiceInterface
 {
     public function getTodos(): TodoCollection;
 
-    public function getUserTodos(int $userId): array;
+    public function getUserTodos(int $userId): TodoCollection;
 
     public function changeTodo(int $todoId, array $payload): array;
 }

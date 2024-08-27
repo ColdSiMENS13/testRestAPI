@@ -62,8 +62,10 @@ readonly class TodoServiceApi implements TodosServiceInterface
      * @throws ClientExceptionInterface
      * @throws UserNotFoundException
      */
-    public function getUserTodos(int $userId): array
+    public function getUserTodos(int $userId): TodoCollection
     {
+        $data = [];
+
         if ($userId > 10 || $userId <= 0) {
             throw new UserNotFoundException();
         }
@@ -73,7 +75,16 @@ readonly class TodoServiceApi implements TodosServiceInterface
             $this->domain.sprintf(self::URI_USER_TODO, $userId)
         );
 
-        return $response->toArray();
+        foreach ($response->toArray() as $value) {
+            $data[] = new TodoDto(
+                userId: $value['userId'],
+                todoId: $value['id'],
+                title: $value['title'],
+                completed: $value['completed']
+            );
+        }
+
+        return new TodoCollection($data);
     }
 
     /**
