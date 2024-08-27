@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Cache;
 
+use App\Application\Collection\TodoCollection;
 use App\Application\Service\TodosServiceInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -28,11 +29,11 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function getTodos(): array
+    public function getTodos(): TodoCollection
     {
         $todos = $this->cache->get(
             sprintf(self::TODO_CACHE_KEY, md5(self::class)),
-            function (ItemInterface $item): array {
+            function (ItemInterface $item): TodoCollection {
                 $todos = $this->todosServiceApi->getTodos();
                 $item->tag(self::TODO_TAG);
                 $item->expiresAfter(3600);

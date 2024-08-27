@@ -2,9 +2,12 @@
 
 namespace App\Application\Service;
 
+
+use App\Application\Collection\TodoCollection;
+
 interface TodosServiceInterface
 {
-    public function getTodos(): array;
+    public function getTodos(): TodoCollection;
 
     public function getUserTodos(int $userId): array;
 

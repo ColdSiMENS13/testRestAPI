@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\HttpClientApi;
 
+use App\Application\Collection\TodoCollection;
+use App\Application\Dto\TodoDto;
 use App\Application\Exception\TodoNotFoundException;
 use App\Application\Exception\UserNotFoundException;
 use App\Application\Service\TodosServiceInterface;
@@ -31,14 +33,25 @@ readonly class TodoServiceApi implements TodosServiceInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getTodos(): array
+    public function getTodos(): TodoCollection
     {
+        $data = [];
+
         $response = $this->client->request(
             'GET',
             $this->domain.self::URI_ALL_TODO
         );
 
-        return $response->toArray();
+        foreach ($response->toArray() as $value) {
+            $data[] = new TodoDto(
+                userId: $value['userId'],
+                todoId: $value['id'],
+                title: $value['title'],
+                completed: $value['completed']
+            );
+        }
+
+        return new TodoCollection($data);
     }
 
     /**
