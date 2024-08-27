@@ -6,9 +6,6 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 
-use const JSON_THROW_ON_ERROR;
-use const JSON_UNESCAPED_UNICODE;
-
 class JsonSerializer
 {
     public function __construct(private readonly array $normalizers)
@@ -22,7 +19,7 @@ class JsonSerializer
             [
                 new JsonEncoder(
                     new JsonEncode([
-                        JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+                        JsonEncode::OPTIONS => \JSON_UNESCAPED_UNICODE | \JSON_THROW_ON_ERROR,
                     ])
                 ),
             ]
@@ -38,7 +35,7 @@ class JsonSerializer
             [
                 new JsonEncoder(
                     new JsonEncode([
-                        JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+                        JsonEncode::OPTIONS => \JSON_UNESCAPED_UNICODE | \JSON_THROW_ON_ERROR,
                     ])
                 ),
             ]
