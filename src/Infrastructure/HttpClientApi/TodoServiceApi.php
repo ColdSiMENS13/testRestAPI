@@ -17,11 +17,11 @@ readonly class TodoServiceApi implements TodosServiceInterface
     private const URI_ALL_TODO = '/todos';
     private const URI_USER_TODO = '/todos?userId=%d';
     private const URI_CHANGE_TODO = '/todos/%d';
-    private string $domain;
 
-    public function __construct(private HttpClientInterface $client)
-    {
-        $this->domain = $_ENV['DOMAIN_URL'];
+    public function __construct(
+        private HttpClientInterface $client,
+        private string $domain
+    ) {
     }
 
     /**
