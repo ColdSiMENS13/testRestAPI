@@ -3,8 +3,12 @@
 namespace App\Infrastructure\Cache;
 
 use App\Application\Collection\TodoCollection;
+use App\Application\Dto\TodoDto;
 use App\Application\Service\TodosServiceInterface;
+use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -33,16 +37,18 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
     {
         $todos = $this->cache->get(
             sprintf(self::TODO_CACHE_KEY, md5(self::class)),
-            function (ItemInterface $item): TodoCollection {
+            function (ItemInterface $item) {
                 $todos = $this->todosServiceApi->getTodos();
                 $item->tag(self::TODO_TAG);
                 $item->expiresAfter(3600);
 
-                return $todos;
+                return $this->getSerializer()->serializer($todos);
             },
         );
 
-        return $todos;
+        $todoDto = $this->getSerializer()->deserializer($todos, TodoDto::class . '[]');
+
+        return new TodoCollection($todoDto);
     }
 
     /**
@@ -52,16 +58,18 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
     {
         $userTodos = $this->cache->get(
             sprintf(self::USER_TODO_CACHE_KEY, md5(self::class.$userId)),
-            function (ItemInterface $item) use ($userId): TodoCollection {
+            function (ItemInterface $item) use ($userId) {
                 $userTodos = $this->todosServiceApi->getUserTodos($userId);
                 $item->tag(self::USER_TODO_TAG);
                 $item->expiresAfter(3600);
 
-                return $userTodos;
+                return $this->getSerializer()->serializer($userTodos);
             }
         );
 
-        return $userTodos;
+        $userTodoDto = $this->getSerializer()->deserializer($userTodos, TodoDto::class . '[]');
+
+        return new TodoCollection($userTodoDto);
     }
 
     /**
@@ -77,5 +85,13 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
         $this->cache->invalidateTags([self::TODO_TAG, self::USER_TODO_TAG]);
 
         return $this->todosServiceApi->changeTodo($todoId, $payload);
+    }
+
+    public function getSerializer(): JsonSerializer
+    {
+        return new JsonSerializer([
+            new ObjectNormalizer(),
+            new ArrayDenormalizer()
+        ]);
     }
 }
