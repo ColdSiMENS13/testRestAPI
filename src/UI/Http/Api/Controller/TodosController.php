@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UI\Http\Api\Controller;
 
 use App\Application\Service\TodosServiceInterface;
+use App\UI\Http\Api\Response\TodoResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,10 +22,14 @@ class TodosController extends AbstractController
     public function getTodos(Request $request): Response
     {
         if (null !== $request->get('userId')) {
-            return $this->json($this->todosServiceApi->getUserTodos((int) $request->get('userId')));
+            $result = $this->todosServiceApi->getUserTodos(intval($request->get('userId')));
+
+            return new TodoResponse($result);
         }
 
-        return $this->json($this->todosServiceApi->getTodos());
+        $result = $this->todosServiceApi->getTodos();
+
+        return new TodoResponse($result);
     }
 
     #[Route(path: '/todos/{id}', requirements: ['id' => '\d+'], methods: 'PUT')]

@@ -46,7 +46,7 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
             },
         );
 
-        $todoDto = $this->getSerializer()->deserializer($todos, TodoDto::class . '[]');
+        $todoDto = $this->getSerializer()->deserializer($todos, TodoDto::class.'[]');
 
         return new TodoCollection($todoDto);
     }
@@ -67,7 +67,7 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
             }
         );
 
-        $userTodoDto = $this->getSerializer()->deserializer($userTodos, TodoDto::class . '[]');
+        $userTodoDto = $this->getSerializer()->deserializer($userTodos, TodoDto::class.'[]');
 
         return new TodoCollection($userTodoDto);
     }
@@ -91,7 +91,7 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
     {
         return new JsonSerializer([
             new ObjectNormalizer(),
-            new ArrayDenormalizer()
+            new ArrayDenormalizer(),
         ]);
     }
 }
