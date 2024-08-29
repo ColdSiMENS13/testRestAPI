@@ -25,6 +25,7 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
     private const USER_TODO_CACHE_KEY = 'UserTodos_%s';
     private const TODO_TAG = 'AllTodos';
     private const USER_TODO_TAG = 'UserTodos';
+    private const CACHE_EXPIRE = 3600;
 
     public function __construct(
         private TagAwareCacheInterface $cache,
@@ -42,7 +43,7 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
             function (ItemInterface $item) {
                 $todos = $this->todosServiceApi->getTodos();
                 $item->tag(self::TODO_TAG);
-                $item->expiresAfter(3600);
+                $item->expiresAfter(self::CACHE_EXPIRE);
 
                 return $this->getSerializer()->serializer($todos);
             },
@@ -63,7 +64,7 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
             function (ItemInterface $item) use ($userId) {
                 $userTodos = $this->todosServiceApi->getUserTodos($userId);
                 $item->tag(self::USER_TODO_TAG);
-                $item->expiresAfter(3600);
+                $item->expiresAfter(self::CACHE_EXPIRE);
 
                 return $this->getSerializer()->serializer($userTodos);
             }

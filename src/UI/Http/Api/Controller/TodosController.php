@@ -20,15 +20,17 @@ class TodosController extends AbstractController
     }
 
     #[Route(path: '/todos', methods: 'GET')]
-    public function getTodos(Request $request): Response
+    public function getTodos(): Response
     {
-        if (null !== $request->get('userId')) {
-            $result = $this->todosServiceApi->getUserTodos(intval($request->get('userId')));
-
-            return new TodoResponse($result);
-        }
-
         $result = $this->todosServiceApi->getTodos();
+
+        return new TodoResponse($result);
+    }
+
+    #[Route(path: '/user/{id}/todos', methods: 'GET')]
+    public function getUserTodos(int $id): Response
+    {
+        $result = $this->todosServiceApi->getUserTodos($id);
 
         return new TodoResponse($result);
     }
