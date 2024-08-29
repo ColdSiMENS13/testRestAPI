@@ -2,24 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Http\Api\Response;
+namespace App\UI\Http\Api\Response\Error;
 
-use App\Application\Collection\TodoCollection;
-use App\Application\Dto\ChangeTodoDto;
 use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
-class TodoResponse extends JsonResponse
+class JsonErrorResponse extends JsonResponse
 {
-    public function __construct(TodoCollection|ChangeTodoDto $response)
+    public function __construct(\Throwable $exception)
     {
         $serializer = new JsonSerializer([
             new ObjectNormalizer(),
             new ArrayDenormalizer(),
         ]);
 
-        parent::__construct($serializer->serializer($response), json: true);
+        parent::__construct($serializer->serializer($exception), json: true);
     }
 }

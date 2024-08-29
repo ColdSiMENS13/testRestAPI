@@ -3,10 +3,15 @@
 namespace App\Infrastructure\HttpClientApi;
 
 use App\Application\Collection\TodoCollection;
+use App\Application\Dto\ChangeTodoDto;
 use App\Application\Dto\TodoDto;
 use App\Application\Exception\TodoNotFoundException;
 use App\Application\Exception\UserNotFoundException;
 use App\Application\Service\TodosServiceInterface;
+use App\Shared\Infrastructure\Serializer\JsonSerializer;
+use App\UI\Http\Api\Request\RequestDto;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -95,11 +100,18 @@ readonly class TodoServiceApi implements TodosServiceInterface
      * @throws ClientExceptionInterface
      * @throws TodoNotFoundException
      */
-    public function changeTodo(int $todoId, array $payload): array
+    public function changeTodo(int $todoId, RequestDto $requestDto): ChangeTodoDto
     {
+        $serializer = new JsonSerializer([
+            new ObjectNormalizer(),
+            new ArrayDenormalizer(),
+        ]);
+
         if ($todoId > 200 || $todoId <= 0) {
             throw new TodoNotFoundException();
         }
+
+        $payload = $serializer->serializer($requestDto);
 
         $response = $this->client->request(
             'PUT',
@@ -109,10 +121,17 @@ readonly class TodoServiceApi implements TodosServiceInterface
                     'Content-Type' => 'application/json; charset=utf-8',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($payload),
+                'body' => $payload,
             ]
         );
 
-        return $response->toArray();
+        $data = $response->toArray();
+
+        return new ChangeTodoDto(
+            userId: $data['userId'],
+            todoId: $data['id'],
+            title: $data['title'],
+            completed: $data['completed']
+        );
     }
 }

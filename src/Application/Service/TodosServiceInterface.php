@@ -4,6 +4,8 @@ namespace App\Application\Service;
 
 
 use App\Application\Collection\TodoCollection;
+use App\Application\Dto\ChangeTodoDto;
+use App\UI\Http\Api\Request\RequestDto;
 
 interface TodosServiceInterface
 {
@@ -11,5 +13,5 @@ interface TodosServiceInterface
 
     public function getUserTodos(int $userId): TodoCollection;
 
-    public function changeTodo(int $todoId, array $payload): array;
+    public function changeTodo(int $todoId, RequestDto $requestDto): ChangeTodoDto;
 }

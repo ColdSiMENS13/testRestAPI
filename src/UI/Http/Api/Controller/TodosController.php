@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UI\Http\Api\Controller;
 
 use App\Application\Service\TodosServiceInterface;
+use App\UI\Http\Api\Request\RequestDto;
 use App\UI\Http\Api\Response\TodoResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,8 +36,8 @@ class TodosController extends AbstractController
     #[Route(path: '/todos/{id}', requirements: ['id' => '\d+'], methods: 'PUT')]
     public function changeTodo(int $id, Request $request): Response
     {
-        $data = json_decode($request->getContent(), true);
+        $result = $this->todosServiceApi->changeTodo($id, RequestDto::createFromRequest($request));
 
-        return $this->json($this->todosServiceApi->changeTodo($id, $data));
+        return new TodoResponse($result);
     }
 }

@@ -3,9 +3,11 @@
 namespace App\Infrastructure\Cache;
 
 use App\Application\Collection\TodoCollection;
+use App\Application\Dto\ChangeTodoDto;
 use App\Application\Dto\TodoDto;
 use App\Application\Service\TodosServiceInterface;
 use App\Shared\Infrastructure\Serializer\JsonSerializer;
+use App\UI\Http\Api\Request\RequestDto;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -80,11 +82,11 @@ readonly class CachedTodoServiceApi implements TodosServiceInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function changeTodo(int $todoId, array $payload): array
+    public function changeTodo(int $todoId, RequestDto $requestDto): ChangeTodoDto
     {
         $this->cache->invalidateTags([self::TODO_TAG, self::USER_TODO_TAG]);
 
-        return $this->todosServiceApi->changeTodo($todoId, $payload);
+        return $this->todosServiceApi->changeTodo($todoId, $requestDto);
     }
 
     public function getSerializer(): JsonSerializer
