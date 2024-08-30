@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\UI\Http\Api\Controller;
 
 use App\Application\Service\TodosServiceInterface;
+use App\UI\Http\Api\Request\RequestDto;
+use App\UI\Http\Api\Response\TodoResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,20 +20,26 @@ class TodosController extends AbstractController
     }
 
     #[Route(path: '/todos', methods: 'GET')]
-    public function getTodos(Request $request): Response
+    public function getTodos(): Response
     {
-        if (null !== $request->get('userId')) {
-            return $this->json($this->todosServiceApi->getUserTodos((int) $request->get('userId')));
-        }
+        $result = $this->todosServiceApi->getTodos();
 
-        return $this->json($this->todosServiceApi->getTodos());
+        return new TodoResponse($result);
+    }
+
+    #[Route(path: '/user/{id}/todos', methods: 'GET')]
+    public function getUserTodos(int $id): Response
+    {
+        $result = $this->todosServiceApi->getUserTodos($id);
+
+        return new TodoResponse($result);
     }
 
     #[Route(path: '/todos/{id}', requirements: ['id' => '\d+'], methods: 'PUT')]
     public function changeTodo(int $id, Request $request): Response
     {
-        $data = json_decode($request->getContent(), true);
+        $result = $this->todosServiceApi->changeTodo($id, RequestDto::createFromRequest($request));
 
-        return $this->json($this->todosServiceApi->changeTodo($id, $data));
+        return new TodoResponse($result);
     }
 }
